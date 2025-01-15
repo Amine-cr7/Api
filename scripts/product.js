@@ -3,16 +3,14 @@ let search = document.querySelector("#search")
 
 let products = [];
 
-function fetchProducts() {
-    return fetch("https://fakestoreapi.com/products")
-        .then(res => res.json())
-        .then(data => {
-            products = data;
-            productsRender(products)
-        });
+async function fetchProducts() {
+    let res = await fetch("https://fakestoreapi.com/products")
+    products = await res.json()
+    productsRender(products)
 }
-function productsRender(products){
-    products.forEach(item => {
+function productsRender(products) {
+    cards.innerHTML = "";
+    products.forEach((item, index) => {
         let div = document.createElement("div")
         div.classList = "product-card"
         let img = document.createElement("img")
@@ -31,12 +29,14 @@ function productsRender(products){
         div.appendChild(h2)
         div.appendChild(p)
         div.appendChild(button)
+        button.addEventListener("click", () => AddToCart(index))
         cards.appendChild(div)
     })
 }
-function filterProducts(){
+function filterProducts() {
     const searchValue = search.value.toLowerCase()
-    const filtered = products.filter()
+    const filtered = products.filter(item => item.title.toLowerCase().includes(searchValue))
+    productsRender(filtered)
 }
 search.addEventListener("input", filterProducts);
 fetchProducts()
